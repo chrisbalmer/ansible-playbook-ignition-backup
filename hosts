@@ -1,0 +1,17 @@
+---
+backup_repositories:
+  hosts:
+    ops-nas-1.farm.oakops.io:
+      ansible_python_interpreter: /usr/local/bin/python
+      backup_directory: ~/
+      ignition_server: 172.21.21.194
+      ignition_port: 8088
+      username: admin
+      password: password
+
+  # vars:
+  #   ignition_servers:
+  #     - ignition_server: localhost
+  #       ignition_port: 8088
+  #       username: admin
+  #       password: password
