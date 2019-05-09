@@ -6,35 +6,28 @@ This playbook will backup user data from an Inductive Automation Ignition server
 
 ## Required Variables
 
-As a trial run, this playbook doesn't support multiple Ignition instances. It will be updated shortly to handle more than one instance. In the meantime, these variables are required:
-
-
 **Directory to save backups to:**
 ```yaml
 backup_directory: ~/
 ```
+Backups will go into `{{ backup_directory }}/{{ ignition_server }}`, so each Ignition server will get its own directory within the backup directory for backups.
 
-**Ignition instance to pull backups from:**
-```yaml
-ignition_server: 172.21.21.194
-```
 
-**Port of the Ignition instance:**
+**Ignition Instances**
 ```yaml
-ignition_port: 8088
+ignition_servers:
+  - ignition_server: ignition.example.com
+    ignition_port: 8088
+    username: admin
+    password: password
 ```
-
-**Ignition instance login:**
-```yaml
-username: admin
-password: password
-```
+A list of the instances to backup. This covers the hostname of the instance, the port and the login details.
 
 *Please make sure you're not using the default password for production Ignition instances.*
 
 ## Hosts
 
-The host you run this on is the host you wish to save the backup file to. If you want to save copies to multiple locations, specify multiple hosts with some hosts in other locations. This will give you off site backups.
+The host you run this on is the host you wish to save the backup file to. If you want to save copies to multiple locations, specify multiple hosts with some hosts in other locations. This will give you off site backups. The provided `hosts` file shows an example of this setup.
 
 ## Testing
 
