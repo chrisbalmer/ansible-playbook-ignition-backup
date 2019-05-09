@@ -2,29 +2,11 @@
 - name: Backup Ignition Projects
   hosts: backup_repositories
   tasks:
-    - name: Get Login Cookie
-      uri:
-        url: "http://{{ ignition_server }}:{{ ignition_port }}/main/web/signin"
-        method: GET
-        status_code: 200
-      register: login
-    - name: Login to Ignition
-      uri:
-        url: "http://{{ ignition_server }}:{{ ignition_port }}/main/web/signin?0-1.IFormSubmitListener-sign~in~form"
-        method: POST
-        body_format: form-urlencoded
-        body:
-          idf3_hf_0: ""
-          username: "{{ username }}"
-          password: "{{ password }}"
-          button: Sign In
-        headers:
-          Cookie: "{{ login.cookies_string }}"
-        status_code: 302
-    - name: Download backup
-      get_url:
-        url: "http://{{ ignition_server }}:{{ ignition_port }}/main/system/backup/partial"
-        dest: "{{ backup_directory }}"
-        headers:
-          Cookie: "{{ login.cookies_string }}"
+    - name: Create Backup Directories
+      file:
+        path: "{{ backup_directory }}/{{ item.ignition_server }}"
+        state: directory
+      with_items: "{{ ignition_servers }}"
+    - include: tasks/backup-ignition.yml
+      with_items: "{{ ignition_servers }}"
 

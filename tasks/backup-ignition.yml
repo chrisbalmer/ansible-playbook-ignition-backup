@@ -1,0 +1,26 @@
+---
+- name: Get Login Cookie for {{ item.ignition_server }}
+  uri:
+    url: "http://{{ item.ignition_server }}:{{ item.ignition_port }}/main/web/signin"
+    method: GET
+    status_code: 200
+  register: login
+- name: Login to Ignition for {{ item.ignition_server }}
+  uri:
+    url: "http://{{ item.ignition_server }}:{{ item.ignition_port }}/main/web/signin?0-1.IFormSubmitListener-sign~in~form"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      idf3_hf_0: ""
+      username: "{{ item.username }}"
+      password: "{{ item.password }}"
+      button: Sign In
+    headers:
+      Cookie: "{{ login.cookies_string }}"
+    status_code: 302
+- name: Download backup for {{ item.ignition_server }}
+  get_url:
+    url: "http://{{ item.ignition_server }}:{{ item.ignition_port }}/main/system/backup/partial"
+    dest: "{{ backup_directory }}/{{ item.ignition_server }}"
+    headers:
+      Cookie: "{{ login.cookies_string }}"
